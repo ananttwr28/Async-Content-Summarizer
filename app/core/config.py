@@ -3,6 +3,11 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     API_V1_STR: str = "/api/v1"
     PROJECT_NAME: str = "AI Summarization Service"
+    
+    # Scraper Settings
+    # Default mimic: Chrome on Windows
+    SCRAPER_USER_AGENT: str = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    SCRAPER_TIMEOUT_SECONDS: float = 15.0
 
     # OpenAI Settings
     OPENAI_API_KEY: str | None = None
