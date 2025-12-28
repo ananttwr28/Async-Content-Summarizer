@@ -57,7 +57,6 @@ class UrlExtractorService:
                 )
                 
             # Limit to 12,000 characters
-            # print(text[:12000])
             return text[:12000]
 
         except httpx.InvalidURL:

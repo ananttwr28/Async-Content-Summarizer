@@ -17,6 +17,10 @@ class Settings(BaseSettings):
     GEMINI_API_KEY: str | None = None
     GEMINI_MODEL: str = "gemini-2.5-flash-lite-preview-09-2025"
 
+    # Database & Redis Settings
+    DATABASE_URL: str = "postgresql://user:password@localhost/summarizer_db"
+    REDIS_URL: str = "redis://localhost:6379/0"
+
     class Config:
         env_file = ".env"
         case_sensitive = True

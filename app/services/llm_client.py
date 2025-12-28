@@ -1,7 +1,9 @@
 from abc import ABC, abstractmethod
 from openai import AsyncOpenAI
 import openai
+import google.generativeai as genai
 from app.core.config import settings
+from google.api_core import exceptions as google_exceptions
 
 class LLMClient(ABC):
     @abstractmethod
@@ -12,11 +14,6 @@ class LLMClient(ABC):
 class OpenAILLMClient(LLMClient):
     def __init__(self):
         if not settings.OPENAI_API_KEY:
-            # We will handle this error in the service layer or let it bubble up, 
-            # but usually it's best to fail early if possible, or fail at request time.
-            # However, for now we will check at request time or initialize client with None 
-            # and let OpenAI SDK throw error? 
-            # The prompt says "Handle missing API key... cleanly".
             pass
         
         self.client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
@@ -32,7 +29,7 @@ class OpenAILLMClient(LLMClient):
                 messages=[
                     {"role": "user", "content": f"Summarize the following text clearly and concisely in 5–7 sentences:\n\n{text}"}
                 ],
-                max_tokens=500, # Reasonable limit for summary
+                max_tokens=500, 
             )
             
             content = response.choices[0].message.content
@@ -50,8 +47,6 @@ class OpenAILLMClient(LLMClient):
         except openai.APIError as e:
             raise RuntimeError(f"OpenAI API returned an error: {e}")
 
-import google.generativeai as genai
-from google.api_core import exceptions as google_exceptions
 
 class GeminiLLMClient(LLMClient):
     def __init__(self):

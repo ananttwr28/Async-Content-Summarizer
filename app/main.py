@@ -1,6 +1,9 @@
 from fastapi import FastAPI
-from app.api import summarize
+from app.api import summarize, jobs
 from app.core.config import settings
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
+from fastapi import Request
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -8,10 +11,7 @@ app = FastAPI(
 )
 
 app.include_router(summarize.router, prefix="", tags=["summarize"])
-
-from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
-from fastapi import Request
+app.include_router(jobs.router, prefix="", tags=["jobs"])
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):

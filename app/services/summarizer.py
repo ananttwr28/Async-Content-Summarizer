@@ -1,4 +1,4 @@
-import logging
+import logging, time
 from fastapi import HTTPException, status
 from app.services.llm_client import GeminiLLMClient
 
@@ -13,12 +13,7 @@ class SummarizerService:
             return await self.llm_client.summarize(text)
 
         except ValueError as e:
-            # Handle missing API Key or Auth errors or empty response
             logger.error(f"Value error in summarizer service: {str(e)}")
-            # If it is auth error or missing key, we might want 500 or 502 depending on perspective.
-            # User said "LLM failure -> HTTP 502".
-            # But "Cleanly" implies maybe telling the user what happened if it's configuration?
-            # Security-wise, strictly detailed errors are risky, but for this internal service/step 1:
             raise HTTPException(
                 status_code=status.HTTP_502_BAD_GATEWAY,
                 detail=f"Summarization service failed: {str(e)}"
